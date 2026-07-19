@@ -1,83 +1,75 @@
-# Internship Application Tracker
+# React + TypeScript + Vite
 
-A TypeScript-based application that allows students to apply for internship opportunities, while administrators manage internship listings and track application progress through a multi-step status lifecycle (**Pending → Under Review → Interview Scheduled → Accepted/Rejected**). 
+This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
 
-## Interfaces & Types
+Currently, two official plugins are available:
 
-Defined in `types/index.ts`:
+- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
+- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
 
-### Core Entities
+## React Compiler
 
-* **Applicant** – represents a user applying for internships with a role field (`student | admin | instructor`)
-* **Internship** – represents an internship opportunity offered by a company
-* **Application** – represents an internship application submitted by an applicant
+The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
 
-### Enums
+## Expanding the ESLint configuration
 
-* **ApplicationStatus** – application lifecycle:
+If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
 
-  * `Pending`
-  * `UnderReview`
-  * `InterviewScheduled`
-  * `Accepted`
-  * `Rejected`
+```js
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
 
-* **Role** *(const enum)* – available user roles:
+      // Remove tseslint.configs.recommended and replace with this
+      tseslint.configs.recommendedTypeChecked,
+      // Alternatively, use this for stricter rules
+      tseslint.configs.strictTypeChecked,
+      // Optionally, add this for stylistic rules
+      tseslint.configs.stylisticTypeChecked,
 
-  * `Student`
-  * `Admin`
-  * `Instructor`
+      // Other configs...
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
 
-### Generic Interface
-
-* **ApiResponse<T>** – reusable generic interface for API responses
-
-### Utility Types
-
-* **ApplicantUpdate** – uses `Partial<Applicant>` for updating applicant information
-* **ApplicantPreview** – uses `Pick<Applicant, "id" | "name" | "role">` for displaying selected applicant details
-* **PublicApplicant** – uses `Omit<Applicant, "email" | "isActive">` to hide sensitive information
-* **StatusLabels** – uses `Record<ApplicationStatus, string>` to map application statuses to readable labels
-
-### Generic Function
-
-Defined in `src/index.ts`:
-
-* **getById<T>()** – reusable generic function that retrieves any entity by its ID (Applicant, Internship, or Application)
-
-## Features
-
-* Manage applicants
-* Store internship opportunities
-* Track internship applications
-* Display application status using enums
-* Retrieve records using a reusable generic function
-* Demonstrate TypeScript utility types and generic interfaces
-
-## Setup & Running
-
-1. Install dependencies:
-
-```bash
-npm install
 ```
 
-2. Compile the project:
+You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
 
-```bash
-npx tsc
+```js
+// eslint.config.js
+import reactX from 'eslint-plugin-react-x'
+import reactDom from 'eslint-plugin-react-dom'
+
+export default defineConfig([
+  globalIgnores(['dist']),
+  {
+    files: ['**/*.{ts,tsx}'],
+    extends: [
+      // Other configs...
+      // Enable lint rules for React
+      reactX.configs['recommended-typescript'],
+      // Enable lint rules for React DOM
+      reactDom.configs.recommended,
+    ],
+    languageOptions: {
+      parserOptions: {
+        project: ['./tsconfig.node.json', './tsconfig.app.json'],
+        tsconfigRootDir: import.meta.dirname,
+      },
+      // other options...
+    },
+  },
+])
+
 ```
-
-3. Run the compiled TypeScript:
-
-```bash
-npx ts-node src/index.ts
-```
-
-4. Check for TypeScript errors:
-
-```bash
-npx tsc --noEmit
-```
-
-The project should compile successfully with **zero TypeScript errors** under **strict mode**.

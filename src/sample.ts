@@ -1,44 +1,41 @@
-import { User, Course, Grade } from "../types";
+import type { Applicant, Internship, Application, ApiResponse } from "./types";
 
-function getUser(id: number): User {
+function getUser(id: number): Applicant {
   return {
-    id: id,
+    id,
     name: "Juan dela Cruz",
     email: "juan@example.com",
     role: "student",
     isActive: true,
-    score: 95.5,
   };
 }
 
-function calculateGrade(score: number, maxScore: number): string {
-  const percentage: number = (score / maxScore) * 100;
-
-  if (percentage >= 90) return "A";
-  if (percentage >= 80) return "B";
-  if (percentage >= 70) return "C";
-  return "F";
-}
-
-function formatCourse(name: string, units: number, semester: string): string {
-  const course: Course = {
-    name,
-    units,
-    semester,
+function formatInternship(name: string, units: number, semester: string): string {
+  const internship: Internship = {
+    id: units,
+    company: name,
+    position: semester,
+    location: "Taguig City",
+    availableSlots: 5,
   };
 
-  return `${course.name} (${course.units} units) - ${course.semester}`;
+  return `${internship.company} - ${internship.position}`;
 }
 
-const user: User = getUser(1);
+const user: Applicant = getUser(1);
 
-const grade: Grade = {
-  score: 85,
-  maxScore: 100,
-  percentage: (85 / 100) * 100,
-  letterGrade: calculateGrade(85, 100),
+const response: ApiResponse<Application[]> = {
+  success: true,
+  data: [
+    {
+      id: 1,
+      applicantId: user.id,
+      internshipId: 2,
+      status: "Under Review",
+    },
+  ],
 };
 
 console.log(user);
-console.log(grade.letterGrade);
-console.log(formatCourse("IT Elective 4", 3, "1st Semester"));
+console.log(response.success);
+console.log(formatInternship("Accenture", 3, "Software Developer Intern"));

@@ -1,5 +1,5 @@
-import type { Applicant, Internship, Application, ApiResponse } from "../types/index";
-import { ApplicationStatus, StatusLabels } from "../types/index";
+import type { Applicant, Internship, Application, ApiResponse } from "./types";
+import { ApplicationStatus, type StatusLabels } from "./types";
 
 // ===== ENUM -> LABEL MAP (uses Record utility type) =====
 const statusLabels: StatusLabels = {
