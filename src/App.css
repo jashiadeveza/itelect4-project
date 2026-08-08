@@ -19,6 +19,28 @@ body{
     min-height:100vh;
 }
 
+.dark body{
+    background:linear-gradient(135deg,#0f172a,#071024,#0b1220);
+}
+
+.dark .header{
+    background:linear-gradient(135deg,hsl(333, 60%, 67%),#e170c9);
+}
+
+.dark .status-message{
+    background:#1e293b;
+    color:#f8fafc;
+    border-color:#334155;
+}
+
+.dark .combined-card,
+.dark .applicant-card,
+.dark .internship-card,
+.dark .application-card{
+    background:#0f172a;
+    border-color:#334155;
+}
+
 /* ===== Main Container ===== */
 
 .app{
@@ -200,6 +222,12 @@ button:hover{
 
     transform:scale(1.03);
 
+}
+
+.dark-toggle {
+    width: auto !important;
+    min-width: 0;
+    margin-top: 0;
 }
 
 /* ===== Status Box ===== */

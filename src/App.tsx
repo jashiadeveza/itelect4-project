@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+﻿import { useEffect, useRef, useState, type ChangeEvent } from "react";
 import "./App.css";
 import ApplicantCard from "./components/ApplicantCard";
 import InternshipCard from "./components/InternshipCard";
@@ -63,22 +63,34 @@ function App() {
   const [internships, setInternships] = useState<Internship[]>([]);
   const [applications, setApplications] = useState<Application[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [selectedApplicantId, setSelectedApplicantId] = useState<number | null>(null);
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [darkMode, setDarkMode] = useState<boolean>(false);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { value: showDetails, toggle: toggleDetails } = useToggle(false);
   const { previousValue } = usePrevious<number | null>(selectedApplicantId);
 
   useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
+  useEffect(() => {
     const loadMockData = (): void => {
       setLoading(true);
+      setError(null);
 
       window.setTimeout(() => {
-        setApplicants(initialApplicants);
-        setInternships(initialInternships);
-        setApplications(initialApplications);
-        setLoading(false);
-        searchInputRef.current?.focus();
+        try {
+          setApplicants(initialApplicants);
+          setInternships(initialInternships);
+          setApplications(initialApplications);
+          setLoading(false);
+          searchInputRef.current?.focus();
+        } catch {
+          setError("Unable to load mock data.");
+          setLoading(false);
+        }
       }, 300);
     };
 
@@ -117,7 +129,15 @@ function App() {
 
   return (
     <div className="app">
-      <div className="header">
+      <div className="header relative">
+        <button
+          onClick={() => setDarkMode((value) => !value)}
+          className="dark-toggle absolute right-4 top-4 z-10 rounded-full bg-white/15 px-3 py-1 text-[0.65rem] font-semibold text-white shadow-sm shadow-black/20 transition hover:bg-white/25 dark:bg-pink-500 dark:hover:bg-pink-600"
+          style={{ width: "auto" }}
+        >
+          {darkMode ? "Light" : "Dark"}
+        </button>
+
         <h1>Internship Application Tracker</h1>
         <h3>Jashia Deveza IT4B</h3>
       </div>
@@ -130,29 +150,33 @@ function App() {
           onChange={handleSearchChange}
           placeholder="Search applicants"
         />
-        <button onClick={toggleDetails}>{showDetails ? "Hide details" : "Show details"}</button>
+        <button onClick={toggleDetails} className="rounded-xl bg-pink-500 px-4 py-2 text-white transition hover:bg-pink-600">
+          {showDetails ? "Hide details" : "Show details"}
+        </button>
       </div>
 
-      <p className="status-message">
-        {loading
-          ? "Loading mock data..."
-          : `Showing ${filteredApplicants.length} applicant${filteredApplicants.length === 1 ? "" : "s"}.`}
-      </p>
+      {loading ? (
+        <div className="status-message loading-state">Loading mock data...</div>
+      ) : error ? (
+        <div className="status-message error-state">Error loading mock data. Please refresh.</div>
+      ) : (
+        <p className="status-message">Showing {filteredApplicants.length} applicant{filteredApplicants.length === 1 ? "" : "s"}.</p>
+      )}
 
-      {selectedApplicantId !== null && (
+      {selectedApplicantId !== null && !loading && !error && (
         <p className="status-message">
           Selected applicant ID: {selectedApplicantId}. Previous selection: {previousValue ?? "none"}.
         </p>
       )}
 
-      <div className="card-grid">
+      <div className="card-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredApplicants.map((applicant) => {
           const internship = internships.find((item) => item.id === applicant.id);
           const application = applications.find((item) => item.applicantId === applicant.id);
 
           return (
             <div key={applicant.id} className="combined-card">
-              <ApplicantCard applicant={applicant} onSelect={handleSelectApplicant} />
+              <ApplicantCard applicant={applicant} onSelect={handleSelectApplicant} variant={showDetails ? "default" : "compact"} />
 
               {showDetails && internship && <InternshipCard internship={internship} onContact={handleContact} />}
 
