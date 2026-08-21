@@ -5,6 +5,7 @@ export interface Applicant {
   email: string;
   role: "student" | "admin" | "instructor";
   isActive: boolean;
+  createdAt: string;
 }
 
 export interface Internship {
@@ -13,6 +14,7 @@ export interface Internship {
   position: string;
   location: string;
   availableSlots: number;
+  createdAt: string;
 }
 
 export interface Application {
@@ -20,7 +22,21 @@ export interface Application {
   applicantId: number;
   internshipId: number;
   status: string;
+  createdAt: string;
 }
+
+// ===== API TYPES =====
+export type ApplicantCreateInput = Omit<Applicant, "id" | "createdAt"> & {
+  createdAt?: string;
+};
+
+export type InternshipCreateInput = Omit<Internship, "id" | "createdAt"> & {
+  createdAt?: string;
+};
+
+export type ApplicationCreateInput = Omit<Application, "id" | "createdAt"> & {
+  createdAt?: string;
+};
 
 // ===== UTILITY TYPES =====
 export type ApplicantUpdate = Partial<Applicant>;

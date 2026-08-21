@@ -1,6 +1,7 @@
+import { useQuery } from "@tanstack/react-query";
 import { useParams, Link } from "react-router";
 import "../App.css";
-import { applicants } from "../data";
+import { api } from "../api/client";
 
 type Params = { id: string };
 
@@ -9,9 +10,17 @@ export default function ApplicantDetailPage() {
   const idParam = params.id;
   const id = idParam ? Number(idParam) : NaN;
 
-  const applicant = applicants.find((a) => a.id === id) ?? null;
+  const { data: applicant, isLoading, isError } = useQuery({
+    queryKey: ["applicant", idParam ?? ""],
+    queryFn: () => api.getApplicantById(id),
+    enabled: Number.isFinite(id),
+  });
 
-  if (!applicant) {
+  if (isLoading) {
+    return <div className="panel">Loading applicant...</div>;
+  }
+
+  if (isError || !applicant) {
     return (
       <div className="panel">
         <h2>Applicant Not Found</h2>

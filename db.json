@@ -1,0 +1,79 @@
+{
+  "applicants": [
+    {
+      "id": "1",
+      "name": "Jashia Deveza",
+      "email": "jashia@gmail.com",
+      "role": "student",
+      "isActive": true,
+      "createdAt": "2025-01-10T08:30:00.000Z"
+    },
+    {
+      "id": "2",
+      "name": "Giann Villasenor",
+      "email": "giann@gmail.com",
+      "role": "student",
+      "isActive": true,
+      "createdAt": "2025-01-12T09:45:00.000Z"
+    },
+    {
+      "id": "3",
+      "name": "Ari Lim",
+      "email": "ari.lim@example.com",
+      "role": "admin",
+      "isActive": false,
+      "createdAt": "2025-02-04T13:20:00.000Z"
+    },
+    {
+      "name": "chea",
+      "email": "cheadeveza@gmail.com",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2026-08-18T11:50:24.362Z",
+      "id": "sy0j4TeDc2g"
+    }
+  ],
+  "internships": [
+    {
+      "id": "1",
+      "company": "Accenture",
+      "position": "Software Developer Intern",
+      "location": "Taguig City",
+      "availableSlots": 5,
+      "createdAt": "2025-01-15T11:00:00.000Z"
+    },
+    {
+      "id": "2",
+      "company": "IBM",
+      "position": "QA Tester Intern",
+      "location": "Quezon City",
+      "availableSlots": 2,
+      "createdAt": "2025-01-18T10:10:00.000Z"
+    },
+    {
+      "id": "3",
+      "company": "Google",
+      "position": "Frontend Engineer Intern",
+      "location": "Makati City",
+      "availableSlots": 3,
+      "createdAt": "2025-02-10T14:45:00.000Z"
+    }
+  ],
+  "applications": [
+    {
+      "id": "101",
+      "applicantId": 1,
+      "internshipId": 1,
+      "status": "Under Review",
+      "createdAt": "2025-01-16T09:00:00.000Z"
+    },
+    {
+      "id": "102",
+      "applicantId": 2,
+      "internshipId": 2,
+      "status": "Interview Scheduled",
+      "createdAt": "2025-01-19T08:30:00.000Z"
+    }
+  ],
+  "$schema": "./node_modules/json-server/schema.json"
+}

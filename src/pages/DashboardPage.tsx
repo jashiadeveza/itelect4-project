@@ -1,104 +1,60 @@
-import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { useEffect, useRef, type ChangeEvent } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import "../App.css";
 import ApplicantCard from "../components/ApplicantCard";
 import InternshipCard from "../components/InternshipCard";
 import ApplicationCard from "../components/ApplicationCard";
 import { usePrevious } from "../hooks/usePrevious";
 import { useToggle } from "../hooks/useToggle";
+import { useUiStore } from "../store/uiStore";
+import { api } from "../api/client";
 
 import type { Applicant, Internship, Application } from "../types";
 
-const initialApplicants: Applicant[] = [
-  {
-    id: 1,
-    name: "Jashia Deveza",
-    email: "jashia@gmail.com",
-    role: "student",
-    isActive: true,
-  },
-  {
-    id: 2,
-    name: "Giann Villasenor",
-    email: "giann@gmail.com",
-    role: "student",
-    isActive: true,
-  },
-];
-
-const initialInternships: Internship[] = [
-  {
-    id: 1,
-    company: "Accenture",
-    position: "Software Developer Intern",
-    location: "Taguig City",
-    availableSlots: 5,
-  },
-  {
-    id: 2,
-    company: "IBM",
-    position: "QA Tester Intern",
-    location: "Quezon City",
-    availableSlots: 2,
-  },
-];
-
-const initialApplications: Application[] = [
-  {
-    id: 101,
-    applicantId: 1,
-    internshipId: 1,
-    status: "Under Review",
-  },
-  {
-    id: 102,
-    applicantId: 2,
-    internshipId: 2,
-    status: "Interview Scheduled",
-  },
-];
-
 export default function DashboardPage() {
-  const [applicants, setApplicants] = useState<Applicant[]>([]);
-  const [internships, setInternships] = useState<Internship[]>([]);
-  const [applications, setApplications] = useState<Application[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedApplicantId, setSelectedApplicantId] = useState<number | null>(null);
-  const [searchTerm, setSearchTerm] = useState<string>("");
+  const queryClient = useQueryClient();
+  const searchTerm = useUiStore((state) => state.searchTerm);
+  const setSearchTerm = useUiStore((state) => state.setSearchTerm);
+  const selectedApplicantId = useUiStore((state) => state.selectedApplicantId);
+  const setSelectedApplicantId = useUiStore((state) => state.setSelectedApplicantId);
+
+  const { data: applicants = [], isLoading: applicantsLoading, isError: applicantsError } = useQuery({
+    queryKey: ["applicants"],
+    queryFn: api.getApplicants,
+  });
+
+  const { data: internships = [], isLoading: internshipsLoading } = useQuery({
+    queryKey: ["internships"],
+    queryFn: api.getInternships,
+  });
+
+  const { data: applications = [], isLoading: applicationsLoading } = useQuery({
+    queryKey: ["applications"],
+    queryFn: api.getApplications,
+  });
+
   const searchInputRef = useRef<HTMLInputElement>(null);
   const { value: showDetails, toggle: toggleDetails } = useToggle(false);
   const { previousValue } = usePrevious<number | null>(selectedApplicantId);
 
- 
-
   useEffect(() => {
-    const loadMockData = (): void => {
-      setLoading(true);
-      setError(null);
-
-      window.setTimeout(() => {
-        try {
-          setApplicants(initialApplicants);
-          setInternships(initialInternships);
-          setApplications(initialApplications);
-          setLoading(false);
-          searchInputRef.current?.focus();
-        } catch {
-          setError("Unable to load mock data.");
-          setLoading(false);
-        }
-      }, 300);
-    };
-
-    loadMockData();
+    searchInputRef.current?.focus();
   }, []);
+
+  const updateStatusMutation = useMutation({
+    mutationFn: ({ application, status }: { application: Application; status: string }) =>
+      api.updateApplicationStatus(application.id, status),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["applications"] });
+    },
+  });
 
   const handleContact = (internship: Internship): void => {
     alert(`Contacting host for ${internship.company} (${internship.position})`);
   };
 
   const handleUpdateStatus = (application: Application, status: string): void => {
-    setApplications((prev) => prev.map((item) => (item.id === application.id ? { ...item, status } : item)));
+    updateStatusMutation.mutate({ application, status });
   };
 
   const handleSelectApplicant = (applicant: Applicant): void => {
@@ -109,6 +65,9 @@ export default function DashboardPage() {
   const handleSearchChange = (event: ChangeEvent<HTMLInputElement>): void => {
     setSearchTerm(event.target.value);
   };
+
+  const loading = applicantsLoading || internshipsLoading || applicationsLoading;
+  const error = applicantsError ? "Unable to load applicants." : null;
 
   const filteredApplicants = applicants.filter((applicant) => {
     const query = searchTerm.trim().toLowerCase();
@@ -125,7 +84,6 @@ export default function DashboardPage() {
 
   return (
     <>
-
       <div className="controls">
         <input
           ref={searchInputRef}
@@ -140,9 +98,9 @@ export default function DashboardPage() {
       </div>
 
       {loading ? (
-        <div className="status-message loading-state">Loading mock data...</div>
+        <div className="status-message loading-state">Loading data...</div>
       ) : error ? (
-        <div className="status-message error-state">Error loading mock data. Please refresh.</div>
+        <div className="status-message error-state">{error}</div>
       ) : (
         <p className="status-message">Showing {filteredApplicants.length} applicant{filteredApplicants.length === 1 ? "" : "s"}.</p>
       )}
@@ -155,8 +113,8 @@ export default function DashboardPage() {
 
       <div className="card-grid grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {filteredApplicants.map((applicant) => {
-          const internship = internships.find((item) => item.id === applicant.id);
           const application = applications.find((item) => item.applicantId === applicant.id);
+          const internship = application ? internships.find((item) => item.id === application.internshipId) : undefined;
 
           return (
             <div key={applicant.id} className="combined-card">
@@ -174,7 +132,7 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="footer">GT 3 Part 1</div>
+      <div className="footer">GT 3 Part 2</div>
     </>
   );
 }
