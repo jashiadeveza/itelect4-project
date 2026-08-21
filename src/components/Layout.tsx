@@ -1,15 +1,15 @@
 import { Link, Outlet, useNavigate } from "react-router";
 import "../App.css";
-import { useState, useEffect } from "react";
+import { useEffect } from "react";
 import { useAuthStore } from "../store/authStore";
-import type { AuthState } from "../store/authStore";
+import { useUiStore } from "../store/uiStore";
 
 export default function Layout() {
   const navigate = useNavigate();
-  const logout = useAuthStore((s: AuthState) => s.logout);
-  const token = useAuthStore((s: AuthState) => s.token);
-
-  const [darkMode, setDarkMode] = useState<boolean>(false);
+  const logout = useAuthStore((s) => s.logout);
+  const token = useAuthStore((s) => s.token);
+  const darkMode = useUiStore((s) => s.darkMode);
+  const toggleDarkMode = useUiStore((s) => s.toggleDarkMode);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", darkMode);
@@ -39,7 +39,7 @@ export default function Layout() {
 
       <div className="header relative">
         <button
-          onClick={() => setDarkMode((v) => !v)}
+          onClick={toggleDarkMode}
           className="dark-toggle"
           style={{ position: "absolute", right: 16, top: 16 }}
         >
