@@ -1,8 +1,10 @@
-import type React from "react";
 import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useAuthStore } from "../store/authStore";
 import type { AuthState } from "../store/authStore";
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
 import "../App.css";
 
 export default function LoginPage() {
@@ -21,8 +23,9 @@ export default function LoginPage() {
     <div>
       <h2>Login</h2>
       <form onSubmit={handleSubmit}>
-        <input value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
-        <button type="submit">Login</button>
+        <Label htmlFor="username">Username</Label>
+        <Input id="username" value={username} onChange={(e) => setUsername(e.target.value)} placeholder="username" />
+        <Button type="submit">Login</Button>
       </form>
     </div>
   );
