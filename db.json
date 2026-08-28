@@ -31,6 +31,14 @@
       "isActive": true,
       "createdAt": "2026-08-18T11:50:24.362Z",
       "id": "sy0j4TeDc2g"
+    },
+    {
+      "name": "jash",
+      "email": "jashia_eimonah_deveza@dlsl.edu.ph",
+      "role": "admin",
+      "isActive": true,
+      "createdAt": "2026-08-28T12:16:44.850Z",
+      "id": "n1C1fq5ekiY"
     }
   ],
   "internships": [

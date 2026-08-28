@@ -12,13 +12,12 @@ function App() {
   return (
     <Routes>
       <Route path="/" element={<Layout />}>
-        <Route index element={<DashboardPage />} />
-        <Route path="applicants" element={<ApplicantsPage />} />
-
         <Route element={<ProtectedRoute />}>
-          <Route path="applicants/:id" element={<ApplicantDetailPage />} />
+          <Route path="applicants" element={<ApplicantsPage />} />
         </Route>
 
+        <Route index element={<DashboardPage />} />
+        <Route path="applicants/:id" element={<ApplicantDetailPage />} />
         <Route path="internships" element={<InternshipsPage />} />
         <Route path="login" element={<LoginPage />} />
         <Route path="*" element={<NotFoundPage />} />

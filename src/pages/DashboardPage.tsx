@@ -132,7 +132,7 @@ export default function DashboardPage() {
         })}
       </div>
 
-      <div className="footer">GT 3 Part 2</div>
+      <div className="footer">GT 3 Part 3</div>
     </>
   );
 }

@@ -1,20 +1,27 @@
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 import "../App.css";
 import { api } from "../api/client";
-import type { Applicant, ApplicantCreateInput } from "../types";
-
-const initialForm = {
-  name: "",
-  email: "",
-  role: "student" as Applicant["role"],
-};
+import { Button } from "../components/ui/button";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import { applicantFormSchema, type ApplicantFormValues } from "../schemas/applicantSchema";
+import type { ApplicantCreateInput } from "../types";
 
 export default function ApplicantsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const [form, setForm] = useState(initialForm);
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ApplicantFormValues>({
+    resolver: zodResolver(applicantFormSchema),
+    defaultValues: { name: "", email: "", role: "student" },
+  });
 
   const { data: applicants = [], isLoading, isError } = useQuery({
     queryKey: ["applicants"],
@@ -25,7 +32,7 @@ export default function ApplicantsPage() {
     mutationFn: (draft: ApplicantCreateInput) => api.createApplicant(draft),
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["applicants"] });
-      setForm(initialForm);
+      reset();
     },
   });
 
@@ -35,18 +42,11 @@ export default function ApplicantsPage() {
     }
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault();
-    const name = form.name.trim();
-    const email = form.email.trim();
-    if (!name || !email) {
-      return;
-    }
-
+  const onSubmit = (values: ApplicantFormValues) => {
     addApplicantMutation.mutate({
-      name,
-      email,
-      role: form.role,
+      name: values.name,
+      email: values.email,
+      role: values.role,
       isActive: true,
       createdAt: new Date().toISOString(),
     });
@@ -57,37 +57,34 @@ export default function ApplicantsPage() {
       <h2>Applicants</h2>
       <p>List of applicants in this app's domain.</p>
 
-      <form onSubmit={handleSubmit} className="mb-6 space-y-3 rounded-xl border border-pink-200 p-4">
+      <form onSubmit={handleSubmit(onSubmit)} className="mb-6 space-y-3 rounded-xl border border-pink-200 p-4" noValidate>
         <div>
-          <input
-            value={form.name}
-            onChange={(event) => setForm((current) => ({ ...current, name: event.target.value }))}
-            placeholder="Applicant name"
-            className="w-full rounded border px-3 py-2"
-          />
+          <Label htmlFor="applicant-name">Name</Label>
+          <Input id="applicant-name" {...register("name")} aria-invalid={Boolean(errors.name)} placeholder="Applicant name" />
+          {errors.name && <p role="alert">{errors.name.message}</p>}
         </div>
         <div>
-          <input
-            value={form.email}
-            onChange={(event) => setForm((current) => ({ ...current, email: event.target.value }))}
-            placeholder="Applicant email"
-            className="w-full rounded border px-3 py-2"
-          />
+          <Label htmlFor="applicant-email">Email</Label>
+          <Input id="applicant-email" type="email" {...register("email")} aria-invalid={Boolean(errors.email)} placeholder="Applicant email" />
+          {errors.email && <p role="alert">{errors.email.message}</p>}
         </div>
         <div>
+          <Label htmlFor="applicant-role">Role</Label>
           <select
-            value={form.role}
-            onChange={(event) => setForm((current) => ({ ...current, role: event.target.value as Applicant["role"] }))}
+            id="applicant-role"
+            {...register("role")}
+            aria-invalid={Boolean(errors.role)}
             className="w-full rounded border px-3 py-2"
           >
             <option value="student">Student</option>
             <option value="admin">Admin</option>
             <option value="instructor">Instructor</option>
           </select>
+          {errors.role && <p role="alert">{errors.role.message}</p>}
         </div>
-        <button type="submit" className="rounded bg-pink-500 px-3 py-2 text-white" disabled={addApplicantMutation.isPending}>
+        <Button type="submit" disabled={addApplicantMutation.isPending}>
           {addApplicantMutation.isPending ? "Saving..." : "Add applicant"}
-        </button>
+        </Button>
       </form>
 
       {isLoading ? (
@@ -103,9 +100,9 @@ export default function ApplicantsPage() {
           ))}
         </ul>
       )}
-      <button onClick={goToFirst} className="mt-4 rounded bg-pink-500 px-3 py-1 text-white" disabled={applicants.length === 0}>
+      <Button onClick={goToFirst} className="mt-4" disabled={applicants.length === 0}>
         Open first applicant
-      </button>
+      </Button>
     </div>
   );
 }
