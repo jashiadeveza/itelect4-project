@@ -1,6 +1,6 @@
 // ===== INTERFACES =====
 export interface Applicant {
-  id: number;
+  id: string;
   name: string;
   email: string;
   role: "student" | "admin" | "instructor";
@@ -9,7 +9,7 @@ export interface Applicant {
 }
 
 export interface Internship {
-  id: number;
+  id: string;
   company: string;
   position: string;
   location: string;
@@ -18,25 +18,34 @@ export interface Internship {
 }
 
 export interface Application {
-  id: number;
-  applicantId: number;
-  internshipId: number;
+  id: string;
+  applicantId: string;
+  internshipId: string;
   status: string;
   createdAt: string;
 }
 
+export type ApiApplication = Application;
+
+export interface ApiUser {
+  id: string;
+  email: string;
+}
+
+export interface AuthReply {
+  token: string;
+  user: ApiUser;
+}
+
 // ===== API TYPES =====
-export type ApplicantCreateInput = Omit<Applicant, "id" | "createdAt"> & {
-  createdAt?: string;
-};
+export type ApplicantCreateInput = Omit<Applicant, "id" | "createdAt">;
 
-export type InternshipCreateInput = Omit<Internship, "id" | "createdAt"> & {
-  createdAt?: string;
-};
+export type InternshipCreateInput = Omit<Internship, "id" | "createdAt">;
 
-export type ApplicationCreateInput = Omit<Application, "id" | "createdAt"> & {
-  createdAt?: string;
-};
+export type ApplicationCreateInput = Pick<
+  Application,
+  "applicantId" | "internshipId"
+>;
 
 // ===== UTILITY TYPES =====
 export type ApplicantUpdate = Partial<Applicant>;
@@ -61,8 +70,7 @@ export const Role = {
 } as const;
 
 // ===== GENERIC INTERFACE =====
-export interface ApiResponse<T> {
-  success: boolean;
-  data: T;
-  message?: string;
+export interface ApiHealth {
+  ok: boolean;
+  db: boolean;
 }

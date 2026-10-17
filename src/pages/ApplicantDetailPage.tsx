@@ -8,12 +8,11 @@ type Params = { id: string };
 export default function ApplicantDetailPage() {
   const params = useParams<Params>();
   const idParam = params.id;
-  const id = idParam ? Number(idParam) : NaN;
 
   const { data: applicant, isLoading, isError } = useQuery({
     queryKey: ["applicant", idParam ?? ""],
-    queryFn: () => api.getApplicantById(id),
-    enabled: Number.isFinite(id),
+    queryFn: () => api.getApplicantById(idParam ?? ""),
+    enabled: Boolean(idParam),
   });
 
   if (isLoading) {

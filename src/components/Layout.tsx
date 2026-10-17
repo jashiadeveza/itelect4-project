@@ -8,6 +8,7 @@ export default function Layout() {
   const navigate = useNavigate();
   const logout = useAuthStore((s) => s.logout);
   const token = useAuthStore((s) => s.token);
+  const userName = useAuthStore((s) => s.userName);
   const darkMode = useUiStore((s) => s.darkMode);
   const toggleDarkMode = useUiStore((s) => s.toggleDarkMode);
 
@@ -29,10 +30,13 @@ export default function Layout() {
         <div style={{ marginLeft: "auto" }}>
           {token ? (
             <button onClick={handleLogout} className="nav-link nav-link--primary" style={{ border: "none" }}>
-              Logout
+              Logout{userName ? ` (${userName})` : ""}
             </button>
           ) : (
-            <Link to="/login" className="nav-link nav-link--primary">Login</Link>
+            <>
+              <Link to="/login" className="nav-link nav-link--primary">Login</Link>
+              <Link to="/register" className="nav-link nav-link--primary">Register</Link>
+            </>
           )}
         </div>
       </nav>
