@@ -8,11 +8,13 @@ import { Button } from "../components/ui/button";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
 import { applicantFormSchema, type ApplicantFormValues } from "../schemas/applicantSchema";
+import { useAuthStore } from "../store/authStore";
 import type { ApplicantCreateInput } from "../types";
 
 export default function ApplicantsPage() {
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const userName = useAuthStore((state) => state.userName);
   const {
     register,
     handleSubmit,
@@ -24,14 +26,14 @@ export default function ApplicantsPage() {
   });
 
   const { data: applicants = [], isLoading, isError } = useQuery({
-    queryKey: ["applicants"],
+    queryKey: ["applicants", userName],
     queryFn: api.getApplicants,
   });
 
   const addApplicantMutation = useMutation({
     mutationFn: (draft: ApplicantCreateInput) => api.createApplicant(draft),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["applicants"] });
+      queryClient.invalidateQueries({ queryKey: ["applicants", userName] });
       reset();
     },
   });
