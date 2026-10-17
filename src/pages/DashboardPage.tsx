@@ -8,12 +8,14 @@ import { Button } from "../components/ui/button";
 import { usePrevious } from "../hooks/usePrevious";
 import { useToggle } from "../hooks/useToggle";
 import { useUiStore } from "../store/uiStore";
+import { useAuthStore } from "../store/authStore";
 import { api } from "../api/client";
 
 import type { Applicant, Internship, Application } from "../types";
 
 export default function DashboardPage() {
   const queryClient = useQueryClient();
+  const userName = useAuthStore((state) => state.userName);
   const [applicantId, setApplicantId] = useState("");
   const [internshipId, setInternshipId] = useState("");
   const searchTerm = useUiStore((state) => state.searchTerm);
@@ -22,7 +24,7 @@ export default function DashboardPage() {
   const setSelectedApplicantId = useUiStore((state) => state.setSelectedApplicantId);
 
   const { data: applicants = [], isLoading: applicantsLoading, isError: applicantsError } = useQuery({
-    queryKey: ["applicants"],
+    queryKey: ["applicants", userName],
     queryFn: api.getApplicants,
   });
 
@@ -32,7 +34,7 @@ export default function DashboardPage() {
   });
 
   const { data: applications = [], isLoading: applicationsLoading } = useQuery({
-    queryKey: ["applications"],
+    queryKey: ["applications", userName],
     queryFn: api.getApplications,
   });
 
@@ -48,14 +50,14 @@ export default function DashboardPage() {
     mutationFn: ({ application, status }: { application: Application; status: string }) =>
       api.updateApplicationStatus(application.id, status),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({ queryKey: ["applications", userName] });
     },
   });
 
   const createApplicationMutation = useMutation({
     mutationFn: api.createApplication,
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["applications"] });
+      queryClient.invalidateQueries({ queryKey: ["applications", userName] });
       setApplicantId("");
       setInternshipId("");
     },
