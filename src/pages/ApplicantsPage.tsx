@@ -48,7 +48,6 @@ export default function ApplicantsPage() {
       email: values.email,
       role: values.role,
       isActive: true,
-      createdAt: new Date().toISOString(),
     });
   };
 

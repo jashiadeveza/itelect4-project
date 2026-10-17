@@ -3,10 +3,10 @@ import { create } from "zustand";
 interface UiState {
   darkMode: boolean;
   searchTerm: string;
-  selectedApplicantId: number | null;
+  selectedApplicantId: string | null;
   toggleDarkMode: () => void;
   setSearchTerm: (value: string) => void;
-  setSelectedApplicantId: (value: number | null) => void;
+  setSelectedApplicantId: (value: string | null) => void;
 }
 
 export const useUiStore = create<UiState>((set) => ({
@@ -15,5 +15,5 @@ export const useUiStore = create<UiState>((set) => ({
   selectedApplicantId: null,
   toggleDarkMode: () => set((state) => ({ darkMode: !state.darkMode })),
   setSearchTerm: (value: string) => set({ searchTerm: value }),
-  setSelectedApplicantId: (value: number | null) => set({ selectedApplicantId: value }),
+  setSelectedApplicantId: (value: string | null) => set({ selectedApplicantId: value }),
 }));
