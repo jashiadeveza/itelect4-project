@@ -4,8 +4,10 @@ A web-based application designed to help students manage and track their interns
 
 Live Deployment
 
-Frontend: itelect4-project-eight.vercel.app
-Backend: itelect4-backend-topaz.vercel.app
+Frontend: https://itelect4-project-eight.vercel.app
+
+Backend: https://itelect4-backend-topaz.vercel.app
+
 
 🛠️ Technologies Used
 
