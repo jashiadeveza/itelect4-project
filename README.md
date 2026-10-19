@@ -1,75 +1,52 @@
-# React + TypeScript + Vite
+Internship Application Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A web-based application designed to help students manage and track their internship applications in one place. It provides an organized way to view internship opportunities and monitor application progress.
 
-Currently, two official plugins are available:
+Live Deployment
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+Frontend: itelect4-project-eight.vercel.app
+Backend: itelect4-backend-topaz.vercel.app
 
-## React Compiler
+🛠️ Technologies Used
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+Frontend
+React
+TypeScript
+Vite
 
-## Expanding the ESLint configuration
+Backend
+Node.js
+Express.js
+MongoDB
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+✨ Features
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+User authentication and registration
+Dashboard for monitoring internship applications
+Internship opportunities management
+Applicant management
+Protected routes for authenticated users
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+⚙️ Development Setup
+Prerequisites
+Node.js and npm
+Access to the backend API and its configured database
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Installation
+Clone the repository:
+git clone https://github.com/jashiadeveza/itelect4-project.git
 
-```
+Navigate to the project directory:
+cd itelect4-project
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+Install dependencies:
+npm install
+Create a .env file in the project root and configure the backend URL:
+VITE_API_URL=https://itelect4-backend-topaz.vercel.app
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Start the development server:
+npm run dev
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
-```
+Build
+To build the application for production:
+npm run build
