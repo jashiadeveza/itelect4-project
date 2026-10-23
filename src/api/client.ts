@@ -38,7 +38,7 @@ async function request<T>(
   try {
     response = await fetch(`${API_BASE_URL}${path}`, {
       ...init,
-      ...(path === "/ai" ? { signal: AbortSignal.timeout(60_000) } : {}),
+      ...(path === "/ai" ? { signal: AbortSignal.timeout(150_000) } : {}),
       headers: {
         "Content-Type": "application/json",
         ...(token ? { Authorization: `Bearer ${token}` } : {}),
