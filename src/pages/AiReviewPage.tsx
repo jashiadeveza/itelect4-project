@@ -101,11 +101,17 @@ export default function AiReviewPage() {
           <p className="text-sm">{reviewMutation.data.summary}</p>
           <div>
             <h4 className="font-semibold">Strengths</h4>
-            <ul className="mt-1 list-disc space-y-1 pl-5 text-sm">
-              {reviewMutation.data.strengths.map((strength, index) => (
-                <li key={`${index}-${strength}`}>{strength}</li>
-              ))}
-            </ul>
+            {reviewMutation.data.strengths.length > 0 ? (
+              <ul className="mt-1 list-disc space-y-1 pl-5 text-sm">
+                {reviewMutation.data.strengths.map((strength, index) => (
+                  <li key={`${index}-${strength}`}>{strength}</li>
+                ))}
+              </ul>
+            ) : (
+              <p className="mt-1 text-sm">
+                No specific strengths were included in the notes.
+              </p>
+            )}
           </div>
           <div>
             <h4 className="font-semibold">Areas to improve or clarify</h4>
