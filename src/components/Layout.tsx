@@ -1,0 +1,72 @@
+import { Link, Outlet, useNavigate } from "react-router";
+import "../App.css";
+import { useEffect } from "react";
+import { useAuthStore } from "../store/authStore";
+import { useUiStore } from "../store/uiStore";
+
+export default function Layout() {
+  const navigate = useNavigate();
+  const logout = useAuthStore((s) => s.logout);
+  const token = useAuthStore((s) => s.token);
+  const userName = useAuthStore((s) => s.userName);
+  const darkMode = useUiStore((s) => s.darkMode);
+  const toggleDarkMode = useUiStore((s) => s.toggleDarkMode);
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", darkMode);
+  }, [darkMode]);
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login");
+  };
+
+  return (
+    <div className="app">
+      <nav className="top-nav" style={{ padding: 12, display: "flex", gap: 12, alignItems: "center" }}>
+        <Link to="/" className="nav-link nav-link--primary">Dashboard</Link>
+        <Link to="/applicants" className="nav-link nav-link--primary">Applicants</Link>
+        <Link to="/internships" className="nav-link nav-link--primary">Internships</Link>
+        {token && (
+          <Link
+            to="/#ai-recommendations"
+            className="nav-link nav-link--primary"
+          >
+            AI Recommendations
+          </Link>
+        )}
+        <div style={{ marginLeft: "auto" }}>
+          {token ? (
+            <button onClick={handleLogout} className="nav-link nav-link--primary" style={{ border: "none" }}>
+              Logout{userName ? ` (${userName})` : ""}
+            </button>
+          ) : (
+            <>
+              <Link to="/login" className="nav-link nav-link--primary">Login</Link>
+              <Link to="/register" className="nav-link nav-link--primary">Register</Link>
+            </>
+          )}
+        </div>
+      </nav>
+
+      <div className="header relative">
+        <button
+          onClick={toggleDarkMode}
+          className="dark-toggle"
+          style={{ position: "absolute", right: 16, top: 16 }}
+        >
+          {darkMode ? "Light" : "Dark"}
+        </button>
+
+        <h1>Internship Application Tracker</h1>
+        <h3>Jashia Deveza IT4B</h3>
+      </div>
+
+      <main style={{ padding: 16 }}>
+        <div className="panel">
+          <Outlet />
+        </div>
+      </main>
+    </div>
+  );
+}
