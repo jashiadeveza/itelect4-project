@@ -2,6 +2,7 @@
 import Layout from "./components/Layout";
 import ProtectedRoute from "./ProtectedRoute";
 import DashboardPage from "./pages/DashboardPage";
+import AiReviewPage from "./pages/AiReviewPage";
 import ApplicantsPage from "./pages/ApplicantsPage";
 import ApplicantDetailPage from "./pages/ApplicantDetailPage";
 import InternshipsPage from "./pages/InternshipsPage";
@@ -15,6 +16,7 @@ function App() {
       <Route path="/" element={<Layout />}>
         <Route element={<ProtectedRoute />}>
           <Route index element={<DashboardPage />} />
+          <Route path="ai-review" element={<AiReviewPage />} />
           <Route path="applicants" element={<ApplicantsPage />} />
           <Route path="applicants/:id" element={<ApplicantDetailPage />} />
         </Route>

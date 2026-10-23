@@ -5,6 +5,7 @@ import type {
   AuthReply,
   ApplicationCreateInput,
   ApiHealth,
+  AiReviewReply,
   Internship,
   InternshipCreateInput,
   InternshipRecommendation,
@@ -13,7 +14,10 @@ import { useAuthStore } from "../store/authStore";
 
 const configuredApiUrl = import.meta.env.VITE_API_URL?.trim();
 export const API_URL = (
-  configuredApiUrl || (import.meta.env.DEV ? "http://localhost:3000" : "")
+  configuredApiUrl ||
+  (import.meta.env.DEV
+    ? "http://localhost:3000"
+    : "https://itelect4-backend-topaz.vercel.app")
 ).replace(/\/+$/, "");
 
 const API_BASE_URL = API_URL ? `${API_URL}/api` : "";
@@ -111,6 +115,12 @@ export const api = {
     request("/ai/recommendations", {
       method: "POST",
       body: JSON.stringify({ applicantId }),
+    }),
+
+  askAi: (prompt: string): Promise<AiReviewReply> =>
+    request("/ai", {
+      method: "POST",
+      body: JSON.stringify({ prompt }),
     }),
 
   createInternship: (payload: InternshipCreateInput): Promise<Internship> =>
