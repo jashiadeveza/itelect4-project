@@ -79,6 +79,11 @@ export default function AiReviewPage() {
         >
           {reviewMutation.isPending ? "Reviewing..." : "Review notes"}
         </Button>
+        {reviewMutation.isPending && (
+          <p className="text-sm text-muted-foreground" role="status">
+            AI reviews can take up to 2 minutes. Please keep this page open.
+          </p>
+        )}
       </form>
 
       {reviewMutation.data && (
