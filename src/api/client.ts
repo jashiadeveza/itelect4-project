@@ -34,14 +34,29 @@ async function request<T>(
   }
 
   const token = includeToken ? useAuthStore.getState().token : null;
-  const response = await fetch(`${API_BASE_URL}${path}`, {
-    ...init,
-    headers: {
-      "Content-Type": "application/json",
-      ...(token ? { Authorization: `Bearer ${token}` } : {}),
-      ...init.headers,
-    },
-  });
+  let response: Response;
+  try {
+    response = await fetch(`${API_BASE_URL}${path}`, {
+      ...init,
+      ...(path === "/ai" ? { signal: AbortSignal.timeout(60_000) } : {}),
+      headers: {
+        "Content-Type": "application/json",
+        ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        ...init.headers,
+      },
+    });
+  } catch (error) {
+    if (
+      path === "/ai" &&
+      error instanceof DOMException &&
+      error.name === "TimeoutError"
+    ) {
+      throw new Error("The AI review took too long. Please try again.", {
+        cause: error,
+      });
+    }
+    throw error;
+  }
 
   if (!response.ok) {
     if (token && response.status === 401) {
