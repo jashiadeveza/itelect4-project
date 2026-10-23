@@ -29,10 +29,10 @@ export default function Layout() {
         <Link to="/internships" className="nav-link nav-link--primary">Internships</Link>
         {token && (
           <Link
-            to="/#ai-recommendations"
+            to="/ai-review"
             className="nav-link nav-link--primary"
           >
-            AI Recommendations
+            AI Review
           </Link>
         )}
         <div style={{ marginLeft: "auto" }}>

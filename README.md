@@ -28,6 +28,7 @@ Dashboard for monitoring internship applications
 Internship opportunities management
 Applicant management
 Protected routes for authenticated users
+Protected AI internship reviews with strengths, improvement areas, and a fit recommendation
 
 ⚙️ Development Setup
 Prerequisites

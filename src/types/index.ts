@@ -21,6 +21,13 @@ export interface InternshipRecommendation extends Internship {
   reason: string;
 }
 
+export interface AiReviewReply {
+  summary: string;
+  strengths: string[];
+  improvementAreas: string[];
+  recommendation: "strong_match" | "potential_match" | "needs_more_information";
+}
+
 export interface Application {
   id: string;
   applicantId: string;
