@@ -97,7 +97,7 @@ export default function AiReviewPage() {
               AI review
             </h3>
             <p className="mt-1 text-sm">
-              Recommendation:{" "}
+              Status:{" "}
               <span className="font-semibold">
                 {recommendationLabels[reviewMutation.data.recommendation]}
               </span>
@@ -119,7 +119,7 @@ export default function AiReviewPage() {
             )}
           </div>
           <div>
-            <h4 className="font-semibold">Areas to improve or clarify</h4>
+            <h4 className="font-semibold">Suggested improvements</h4>
             {reviewMutation.data.improvementAreas.length > 0 ? (
               <ul className="mt-1 list-disc space-y-1 pl-5 text-sm">
                 {reviewMutation.data.improvementAreas.map((area, index) => (
