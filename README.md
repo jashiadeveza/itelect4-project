@@ -1,3 +1,5 @@
+# [![CI](https://github.com/jashiadeveza/itelect4-project/actions/workflows/ci.yml/badge.svg)](https://github.com/jashiadeveza/itelect4-project/actions/workflows/ci.yml)
+
 Internship Application Tracker
 
 A web-based application designed to help students manage and track their internship applications in one place. It provides an organized way to view internship opportunities and monitor application progress.
